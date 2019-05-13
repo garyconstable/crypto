@@ -17,8 +17,8 @@ class GetRatesCommand extends Command
 {
     protected static $defaultName = 'zoinbase:get:rates';
 
-    private $apiKey = "aVni2bEOeVAADMQl";
-    private $apiSecret = "EI61xAnwwN1Uye2Oe1IwRNzbgjew4OJS";
+    private $apiKey = null;
+    private $apiSecret = null;
     private $client = null;
     private $entityManager;
     private $cryptos = ['BTC', 'ETH'];
@@ -34,6 +34,9 @@ class GetRatesCommand extends Command
     ) {
         parent::__construct();
         $this->entityManager = $container->get('doctrine')->getManager();
+
+        $this->apiKey = getenv('COINBASE_KEY');
+        $this->apiSecret = getenv('COINBASE_SECRET');
     }
 
     /**
@@ -47,7 +50,6 @@ class GetRatesCommand extends Command
     {
         $configuration = Configuration::apiKey($this->apiKey, $this->apiSecret);
         $this->client = Client::create($configuration);
-
         $this->getCrypto();
         $this->getFiats();
     }

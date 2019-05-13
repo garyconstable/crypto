@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "coinbase/coinbase": "^2.8",
+        "cron/cron-bundle": "^2.1",
         "sensio/framework-extra-bundle": "^5.1",
         "squizlabs/php_codesniffer": "^3.4",
         "symfony/asset": "4.2.*",
