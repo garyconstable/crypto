@@ -50,6 +50,9 @@ class GetRatesCommand extends Command
     {
         $configuration = Configuration::apiKey($this->apiKey, $this->apiSecret);
         $this->client = Client::create($configuration);
+
+        $this->emailMinMax();
+
         $this->getCrypto();
         $this->getFiats();
     }
@@ -101,6 +104,11 @@ class GetRatesCommand extends Command
             $data = $this->listExchangeRates($this->client, $crypto);
             $gbp = $data['rates']['GBP'];
 
+            if ($crypto == 'BTC') {
+                $this->emailMinMax($gbp);
+            }
+
+
             $r = new Rates();
             $r->setCurrency($crypto);
             $r->setCurrency2('GBP');
@@ -134,5 +142,42 @@ class GetRatesCommand extends Command
                 $this->entityManager->flush();
             }
         }
+    }
+
+    public function emailMinMax($current_rate = 0.00)
+    {
+        $sql = "SELECT `value` FROM `rates` where `currency` = 'BTC' ORDER BY `value` ASC LIMIT 1;";
+        $stmt = $this->entityManager->getConnection()->prepare($sql);
+        $stmt->execute();
+        $data = $stmt->fetchAll();
+        $min = $data[0]['value'];
+
+        $sql = "SELECT `value` FROM `rates` where `currency` = 'BTC' ORDER BY `value` DESC LIMIT 1;";
+        $stmt = $this->entityManager->getConnection()->prepare($sql);
+        $stmt->execute();
+        $data = $stmt->fetchAll();
+        $max = $data[0]['value'];
+
+        $values = ['min' => $min, 'max' => $max];
+
+        $to = 'garyconstable80@gmail.com';
+        $subject = 'Current Bitcoin Rates.';
+
+        $headers = "From: garyconstable.dev\r\n";
+        //$headers .= "Reply-To: ". strip_tags($_POST['req-email']) . "\r\n";
+        //$headers .= "CC: susan@example.com\r\n";
+        $headers .= "MIME-Version: 1.0\r\n";
+        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+
+        $message  = '<p><strong>Current Bitcoin Rates</strong></p>';
+        $message .= '<p>1 BTC = &pound;'.$current_rate.'</p>';
+
+        $message .= '<p><strong>Current Lowest:</strong></p>';
+        $message .= '<p>1 BTC = &pound;'. $values['min'].'</p>';
+
+        $message .= '<p><strong>Current Highest:</strong></p>';
+        $message .= '<p>1 BTC = &pound;'. $values['max'].'</p>';
+
+        mail($to, $subject, $message, $headers);
     }
 }
