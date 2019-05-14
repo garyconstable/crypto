@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d55f3bbdf87b6b9156bef8fec86fefd",
+    "content-hash": "11857bc55e3810fff002c2ab9e64bb0e",
     "packages": [
         {
             "name": "coinbase/coinbase",

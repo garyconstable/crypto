@@ -12,6 +12,7 @@ use Psr\Log\LoggerInterface;
 use Coinbase\Wallet\Client;
 use Coinbase\Wallet\Configuration;
 use Symfony\Component\Validator\Constraints\Date;
+use \Swift_Mailer;
 
 class GetRatesCommand extends Command
 {
@@ -20,6 +21,7 @@ class GetRatesCommand extends Command
     private $apiKey = null;
     private $apiSecret = null;
     private $client = null;
+    private $mailer = null;
     private $entityManager;
     private $cryptos = ['BTC', 'ETH'];
     private $fiats = ['GBP'];
@@ -28,15 +30,17 @@ class GetRatesCommand extends Command
      * GetRatesCommand constructor.
      * ==
      * @param ContainerInterface $container
+     * @param Swift_Mailer $mailer
      */
     public function __construct(
-        ContainerInterface $container
+        ContainerInterface $container,
+        Swift_Mailer $mailer
     ) {
         parent::__construct();
         $this->entityManager = $container->get('doctrine')->getManager();
-
         $this->apiKey = getenv('COINBASE_KEY');
         $this->apiSecret = getenv('COINBASE_SECRET');
+        $this->mailer = $mailer;
     }
 
     /**
@@ -50,9 +54,6 @@ class GetRatesCommand extends Command
     {
         $configuration = Configuration::apiKey($this->apiKey, $this->apiSecret);
         $this->client = Client::create($configuration);
-
-        $this->emailMinMax();
-
         $this->getCrypto();
         $this->getFiats();
     }
@@ -107,8 +108,7 @@ class GetRatesCommand extends Command
             if ($crypto == 'BTC') {
                 $this->emailMinMax($gbp);
             }
-
-
+            
             $r = new Rates();
             $r->setCurrency($crypto);
             $r->setCurrency2('GBP');
@@ -160,24 +160,23 @@ class GetRatesCommand extends Command
 
         $values = ['min' => $min, 'max' => $max];
 
-        $to = 'garyconstable80@gmail.com';
-        $subject = 'Current Bitcoin Rates.';
+        $body  = '<p><strong>Current Bitcoin Rates</strong></p>';
+        $body .= '<p>1 BTC = &pound;'.$current_rate.'</p>';
 
-        $headers = "From: garyconstable.dev\r\n";
-        //$headers .= "Reply-To: ". strip_tags($_POST['req-email']) . "\r\n";
-        //$headers .= "CC: susan@example.com\r\n";
-        $headers .= "MIME-Version: 1.0\r\n";
-        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+        $body .= '<p><strong>Current Lowest:</strong></p>';
+        $body .= '<p>1 BTC = &pound;'. $values['min'].'</p>';
 
-        $message  = '<p><strong>Current Bitcoin Rates</strong></p>';
-        $message .= '<p>1 BTC = &pound;'.$current_rate.'</p>';
+        $body .= '<p><strong>Current Highest:</strong></p>';
+        $body .= '<p>1 BTC = &pound;'. $values['max'].'</p>';
 
-        $message .= '<p><strong>Current Lowest:</strong></p>';
-        $message .= '<p>1 BTC = &pound;'. $values['min'].'</p>';
+        $message = (new \Swift_Message('Current Bitcoin Rates.'))
+            ->setFrom('info@garyconstable.dev')
+            ->setTo('garyconstable80@gmail.com')
+            ->setBody(
+                $body,
+                'text/html'
+            );
 
-        $message .= '<p><strong>Current Highest:</strong></p>';
-        $message .= '<p>1 BTC = &pound;'. $values['max'].'</p>';
-
-        mail($to, $subject, $message, $headers);
+        $this->mailer->send($message);
     }
 }
