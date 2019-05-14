@@ -108,7 +108,7 @@ class GetRatesCommand extends Command
             if ($crypto == 'BTC') {
                 $this->emailMinMax($gbp);
             }
-            
+
             $r = new Rates();
             $r->setCurrency($crypto);
             $r->setCurrency2('GBP');
@@ -163,10 +163,10 @@ class GetRatesCommand extends Command
         $body  = '<p><strong>Current Bitcoin Rates</strong></p>';
         $body .= '<p>1 BTC = &pound;'.$current_rate.'</p>';
 
-        $body .= '<p><strong>Current Lowest:</strong></p>';
+        $body .= '<p><strong>Lowest:</strong></p>';
         $body .= '<p>1 BTC = &pound;'. $values['min'].'</p>';
 
-        $body .= '<p><strong>Current Highest:</strong></p>';
+        $body .= '<p><strong>Highest:</strong></p>';
         $body .= '<p>1 BTC = &pound;'. $values['max'].'</p>';
 
         $message = (new \Swift_Message('Current Bitcoin Rates.'))
