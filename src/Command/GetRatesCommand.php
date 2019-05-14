@@ -159,13 +159,10 @@ class GetRatesCommand extends Command
         $max = $data[0]['value'];
 
         $values = ['min' => $min, 'max' => $max];
-
-        $body  = '<p><strong>Current Bitcoin Rates</strong></p>';
-        $body .= '<p>1 BTC = &pound;'.$current_rate.'</p>';
-
+        
+        $body  = '<p>1 BTC = &pound;'.$current_rate.'</p>';
         $body .= '<p><strong>Lowest:</strong></p>';
         $body .= '<p>1 BTC = &pound;'. $values['min'].'</p>';
-
         $body .= '<p><strong>Highest:</strong></p>';
         $body .= '<p>1 BTC = &pound;'. $values['max'].'</p>';
 
