@@ -90,7 +90,7 @@ class IndexController extends AbstractController
         $sell_data      = $this->getSell();
         $sell_btc_rate  = $sell_data['gbp'];
 
-        $costs = [20, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 850, 900, 950, 1000];
+        $costs = [20, 100, 150, 200, 250, 300, 350, 400, 450, 500/*, 550, 600, 650, 700, 850, 900, 950, 1000*/];
         $data = [];
 
         $current_rate   = $this->getRate();
