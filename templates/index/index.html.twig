@@ -3,20 +3,65 @@
 {% block title %}Crypto - Gary Constable - Web Developer - Exeter{% endblock %}
 
 {% block body %}
-{#
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/application/src/Controller/IndexController.php'|file_link(0) }}">src/Controller/IndexController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/application/templates/index/index.html.twig'|file_link(0) }}">templates/index/index.html.twig</a></code></li>
-    </ul>
-</div>
-#}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="m-4">&nbsp;</div>
+                <h1>BTC - Profit and Loss</h1>
+                <div class="m-2">&nbsp;</div>
+
+                <p><strong>1 BTC:</strong> &pound;{{ current_rate }}
+                <strong>Lowest:</strong> &pound;{{ min_rate }}
+                <strong>Highest:</strong> &pound;{{ max_rate }}</p>
+
+                <div class="m-2">&nbsp;</div>
+
+                <table class="table table-sm table-hover table-striped {#table-dark#}">
+                    <thead>
+                        <tr>
+                            <th scope="col">Cost</th>
+                            <th scope="col">Fee</th>
+                            <th scope="col">GBP</th>
+                            <th scope="col">BTC</th>
+                            <th scope="col">Buy</th>
+                            <th scope="col">Sell</th>
+                            <th scope="col">Value (GBP)</th>
+                            <th scope="col">Fee</th>
+                            <th scope="col">Subtotal</th>
+                            <th scope="col">Profit / Loss</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for row in data %}
+
+                        {%  set row_class = '' %}
+                        {% if row.cost == 200 %}
+                            {%  set row_class = 'table-success' %}
+                        {% endif %}
+
+                        <tr class="{{ row_class }}">
+                            <td>{{ row.cost }}</td>
+                            <td>{{ row.fee }}</td>
+                            <td>{{ row.gbp }}</td>
+                            <td>{{ row.btc }}</td>
+                            <td>{{ row.buy_btc_rate }}</td>
+                            <td>{{ row.sell_btc_rate }}</td>
+                            <td>{{ row.value_gbp }}</td>
+                            <td>{{ row.fee_sell }}</td>
+                            <td>{{ row.subtotal }}</td>
+                            <td>{{ row.profit_loss }}</td>
+                        </tr>
+                    {%  endfor %}
+                    </tbody>
+                </table>
+                <div class="m-4">&nbsp;</div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
