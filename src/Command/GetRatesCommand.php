@@ -150,13 +150,13 @@ class GetRatesCommand extends Command
         $stmt = $this->entityManager->getConnection()->prepare($sql);
         $stmt->execute();
         $data = $stmt->fetchAll();
-        $min = $data[0]['value'];
+        $min = isset($data[0]['value']) ? $data[0]['value'] : 0;
 
         $sql = "SELECT `value` FROM `rates` where `currency` = 'BTC' ORDER BY `value` DESC LIMIT 1;";
         $stmt = $this->entityManager->getConnection()->prepare($sql);
         $stmt->execute();
         $data = $stmt->fetchAll();
-        $max = $data[0]['value'];
+        $max = isset($data[0]['value']) ? $data[0]['value'] : 0 ;
 
         $values = ['min' => $min, 'max' => $max];
 

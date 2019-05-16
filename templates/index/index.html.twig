@@ -1,67 +1,81 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Crypto - Gary Constable - Web Developer - Exeter{% endblock %}
+{% block title %}Gary Constable - Freelance - Web Developer - Exeter - UK{% endblock %}
+
+{% block stylesheets %}
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-140401895-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-140401895-1');
+    </script>
+
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link href="/css/cover.css" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
 
 {% block body %}
-
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="m-4">&nbsp;</div>
-                <h1>BTC - Profit and Loss</h1>
-                <div class="m-2">&nbsp;</div>
-
-                <p><strong>1 BTC:</strong> &pound;{{ current_rate }}
-                <strong>Lowest:</strong> &pound;{{ min_rate }}
-                <strong>Highest:</strong> &pound;{{ max_rate }}</p>
-
-                <div class="m-2">&nbsp;</div>
-
-                <table class="table table-sm table-hover table-striped {#table-dark#}">
-                    <thead>
-                        <tr>
-                            <th scope="col">Cost</th>
-                            <th scope="col">Fee</th>
-                            <th scope="col">GBP</th>
-                            <th scope="col">BTC</th>
-                            <th scope="col">Buy</th>
-                            <th scope="col">Sell</th>
-                            <th scope="col">Value (GBP)</th>
-                            <th scope="col">Fee</th>
-                            <th scope="col">Subtotal</th>
-                            <th scope="col">Profit / Loss</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                    {% for row in data %}
-
-                        {%  set row_class = '' %}
-                        {% if row.cost == 200 %}
-                            {%  set row_class = 'table-success' %}
-                        {% endif %}
-
-                        <tr class="{{ row_class }}">
-                            <td>{{ row.cost }}</td>
-                            <td>{{ row.fee }}</td>
-                            <td>{{ row.gbp }}</td>
-                            <td>{{ row.btc }}</td>
-                            <td>{{ row.buy_btc_rate }}</td>
-                            <td>{{ row.sell_btc_rate }}</td>
-                            <td>{{ row.value_gbp }}</td>
-                            <td>{{ row.fee_sell }}</td>
-                            <td>{{ row.subtotal }}</td>
-                            <td>{{ row.profit_loss }}</td>
-                        </tr>
-                    {%  endfor %}
-                    </tbody>
-                </table>
-                <div class="m-4">&nbsp;</div>
-            </div>
+    <div class="text-center" style="width:100%">
+        <div class="cover-container d-flex w-100 h-100 mx-auto flex-column">
+            <header class="masthead mb-auto">
+            </header>
+            <main role="main" class="inner cover">
+                <article>
+                    <div class="white-bg padding-20 main-part">
+                        <div class="row">
+                            <div class="col-12 col-lg-3">
+                                <img class="profile-img" src="/images/img_avatar.png" />
+                                <p class="m-4"></p>
+                                <a href="mailto:info@garyconstable.dev" class="btn btn-lg btn-primary">Hire Me</a>
+                                <p class="m-2"></p>
+                            </div>
+                            <div class="col-12 col-lg-9 text-left">
+                                <div class="head-part">
+                                    <h1 class="display-5">Gary Constable</h1>
+                                    <h3 class="display-4">PHP Web Developer</h3>
+                                    <ul>
+                                        <li><i class="fas fa-at"></i> <a href="mailto:info@garyconstable.dev">info@garyconstable.dev</a> </li>
+                                        <li><i class="fas fa-mobile-alt"></i> <a href="mailto:07702795435">+44 (0) 7792795435</a> </li>
+                                        <li><i class="fas fa-map-marker-alt"></i> Exeter, United Kingdom</li>
+                                    </ul>
+                                </div>
+                                <p>Hello, I'm Gary a Web Developer based in Exeter, Devon. I have been working with some top
+                                    agencies gaining a a wide range of development skills, front and backend.<br><br>
+                                    I'm currently working as a PHP developer, I make bespoke websites and add new features to
+                                    a variety of popular CMS and Ecommerce systems.</p>
+                                <ul>
+                                    <li><span class="badge badge-secondary">Wordpress</span></li>
+                                    <li><span class="badge badge-secondary"> Responsive Web Developer</span></li>
+                                    <li><span class="badge badge-secondary">Bootstrap</span></li>
+                                    <li><span class="badge badge-secondary"> PHP</span></li>
+                                    <li><span class="badge badge-secondary">HTML + CSS</span></li>
+                                    <li><span class="badge badge-secondary">jQuery</span></li>
+                                    <li><span class="badge badge-secondary">PSD to HTML</span></li>
+                                    <li><span class="badge badge-secondary">Theme Development</span></li>
+                                    <li><span class="badge badge-secondary">Craft</span></li>
+                                    <li><span class="badge badge-secondary">Opencart</span></li>
+                                    <li><span class="badge badge-secondary">Prestashop</span></li>
+                                    <li><span class="badge badge-secondary">Magento 2</span></li>
+                                    <li><span class="badge badge-secondary">Vue</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </main>
+            <footer class="mastfoot mt-auto">
+            </footer>
         </div>
     </div>
 {% endblock %}

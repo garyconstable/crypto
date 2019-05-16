@@ -13,7 +13,7 @@ services:
       container_name: coinbase-mariadb
 #      working_dir: /application
       volumes:
-        - /Volumes/segate/coinbase_data/mysql:/var/lib/mysql
+        - /Users/garyconstable/Desktop/code/data/coinbase:/var/lib/mysql
       environment:
         - MYSQL_ROOT_PASSWORD=root
         - MYSQL_DATABASE=coinbase_v1

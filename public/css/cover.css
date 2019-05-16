@@ -1,0 +1,192 @@
+/*
+ * Globals
+ */
+
+/* Links */
+a,
+a:focus,
+a:hover {
+    color: #fff;
+}
+
+/* Custom default button */
+.btn-secondary,
+.btn-secondary:hover,
+.btn-secondary:focus {
+    color: #333;
+    text-shadow: none; /* Prevent inheritance from `body` */
+    background-color: #fff;
+    border: .05rem solid #fff;
+}
+
+
+/*
+ * Base structure
+ */
+
+html,
+body {
+    height: 100%;
+    background-color: #333;
+}
+
+body {
+    display: -ms-flexbox;
+    display: flex;
+    color: #fff;
+    text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+    box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+}
+
+.cover-container {
+    max-width: 42em;
+}
+
+
+/*
+ * Header
+ */
+.masthead {
+    margin-bottom: 2rem;
+}
+
+.masthead-brand {
+    margin-bottom: 0;
+}
+
+.nav-masthead .nav-link {
+    padding: .25rem 0;
+    font-weight: 700;
+    color: rgba(255, 255, 255, .5);
+    background-color: transparent;
+    border-bottom: .25rem solid transparent;
+}
+
+.nav-masthead .nav-link:hover,
+.nav-masthead .nav-link:focus {
+    border-bottom-color: rgba(255, 255, 255, .25);
+}
+
+.nav-masthead .nav-link + .nav-link {
+    margin-left: 1rem;
+}
+
+.nav-masthead .active {
+    color: #fff;
+    border-bottom-color: #fff;
+}
+
+@media (min-width: 48em) {
+    .masthead-brand {
+        float: left;
+    }
+    .nav-masthead {
+        float: right;
+    }
+}
+
+
+/*
+ * Cover
+ */
+.cover {
+    padding: 0 1.5rem;
+}
+.cover .btn-lg {
+    padding: .75rem 1.25rem;
+    font-weight: 700;
+}
+
+
+/*
+ * Footer
+ */
+.mastfoot {
+    color: rgba(255, 255, 255, .5);
+}
+
+
+
+.white-bg{
+    background:white;
+    color:#333;
+}
+
+.padding-20{
+    padding: 20px;
+}
+
+.profile-img{
+    border-radius: 100%;
+    max-width: 60%;
+    margin: auto;
+    display: block;
+}
+
+@media (min-width: 1024px) {
+    .profile-img{
+        max-width: 100%;
+    }
+}
+
+.main-part{
+    text-shadow: none;
+}
+
+.main-part ul {
+    padding:0;
+}
+
+.main-part ul li{
+    display: inline-block;
+}
+
+.cover-container{
+    max-width: calc(100% - 15px);
+}
+
+.main-part h1{
+    color: #F2695C;
+}
+
+.main-part a{
+    color: #71A8D9;
+}
+
+.main-part a.btn-primary{
+    color:white;
+}
+
+@media(max-width: 768px){
+
+    .head-part{
+        text-align: center;
+    }
+}
+
+@media(max-width: 968px){
+    .inner.cover {
+        padding: 15px 5px;
+    }
+}
+
+/* Color Theme Swatches in Hex */
+.Illustration-1-hex { color: #010326; }
+.Illustration-2-hex { color: #719ED9; }
+.Illustration-3-hex { color: #71A8D9; }
+.Illustration-4-hex { color: #F2695C; }
+.Illustration-5-hex { color: #F2F2F2; }
+
+/* Color Theme Swatches in RGBA */
+.Illustration-1-rgba { color: rgba(0, 2, 38, 1); }
+.Illustration-2-rgba { color: rgba(112, 157, 216, 1); }
+.Illustration-3-rgba { color: rgba(112, 168, 216, 1); }
+.Illustration-4-rgba { color: rgba(242, 104, 92, 1); }
+.Illustration-5-rgba { color: rgba(242, 242, 242, 1); }
+
+/* Color Theme Swatches in HSLA */
+.Illustration-1-hsla { color: hsla(236, 96, 7, 1); }
+.Illustration-2-hsla { color: hsla(213, 57, 64, 1); }
+.Illustration-3-hsla { color: hsla(208, 57, 64, 1); }
+.Illustration-4-hsla { color: hsla(5, 85, 65, 1); }
+.Illustration-5-hsla { color: hsla(0, 0, 95, 1); }
