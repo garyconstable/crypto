@@ -178,6 +178,9 @@ class GetRatesCommand extends Command
         }
     }
 
+    /**
+     * ==
+     */
     public function emailMinMax()
     {
 
@@ -200,9 +203,47 @@ class GetRatesCommand extends Command
         $spot = isset($data[0]['value']) ? $data[0]['value'] : 0.00;
 
 
-        $body  = '<p><strong>Buy</strong>: &pound;' . $buy . '</p>';
+        $transactions = $this->calculateTransaction($sell);
+
+        $body = '<p><strong>Buy</strong>: &pound;' . $buy . '</p>';
         $body .= '<p><strong>Sell</strong>: &pound;' . $sell . '</p>';
         $body .= '<p><strong>Spot</strong>: &pound;' . $spot . '</p>';
+
+        if (!empty($transactions)) {
+            $body .= '<hr>';
+            $body .= '<table cellpadding="10" cellspacing="10">';
+            $body .= '<thead>';
+            $body .= '<tr>';
+            $body .= '<th>Cost</th>';
+            $body .= '<th>Fee</th>';
+            $body .= '<th>GBP</th>';
+            $body .= '<th>BTC</th>';
+            $body .= '<th>Buy</th>';
+            $body .= '<th>Sell</th>';
+            $body .= '<th>Value</th>';
+            $body .= '<th>Fee</th>';
+            $body .= '<th>Subtotal</th>';
+            $body .= '<th>Profit / Loss</th>';
+            $body .= '</tr>';
+            $body .= '</thead>';
+            $body .= '<tbody>';
+            foreach ($transactions as $transaction) {
+                $body .= '<tr>';
+                $body .= '<td>' . $transaction['cost'] . '</td>';
+                $body .= '<td>' . $transaction['fee'] . '</td>';
+                $body .= '<td>' . $transaction['gbp'] . '</td>';
+                $body .= '<td>' . $transaction['btc'] . '</td>';
+                $body .= '<td>' . $transaction['buy_btc_rate'] . '</td>';
+                $body .= '<td>' . $transaction['sell_btc_rate'] . '</td>';
+                $body .= '<td>' . $transaction['value_gbp'] . '</td>';
+                $body .= '<td>' . $transaction['fee_sell'] . '</td>';
+                $body .= '<td>' . $transaction['subtotal'] . '</td>';
+                $body .= '<td>' . $transaction['profit_loss'] . '</td>';
+                $body .= '</tr>';
+            }
+            $body .= '</tbody>';
+            $body .= '</table>';
+        }
 
         $message = (new \Swift_Message('Current Bitcoin Rates.'))
             ->setFrom('info@garyconstable.dev')
@@ -213,5 +254,32 @@ class GetRatesCommand extends Command
             );
 
         $this->mailer->send($message);
+    }
+
+    /**
+     * ==
+     * @param float $sell_btc_rate
+     * @return array
+     */
+    public function calculateTransaction($sell_btc_rate = 0.00)
+    {
+        $data = [];
+        $transactions = $this->entityManager->getRepository('App:Transaction')->findAll();
+
+        foreach ($transactions as $transaction) {
+            $tmp = [];
+            $tmp['cost'] = $transaction->getCost();
+            $tmp['fee'] = $transaction->getFee();
+            $tmp['gbp'] = $transaction->getGbp();
+            $tmp['btc'] = $transaction->getBtc();
+            $tmp['buy_btc_rate'] = $transaction->getBuyRate();
+            $tmp['sell_btc_rate'] = $sell_btc_rate;
+            $tmp['value_gbp'] = $sell_btc_rate * $tmp['btc'];
+            $tmp['fee_sell'] = $transaction->getFee();
+            $tmp['subtotal'] = $tmp['value_gbp'] - $tmp['fee_sell'];
+            $tmp['profit_loss'] = $tmp['subtotal'] - $tmp['cost'];
+            $data[] = $tmp;
+        }
+        return $data;
     }
 }
