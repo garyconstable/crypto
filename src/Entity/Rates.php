@@ -36,6 +36,11 @@ class Rates
      */
     private $date_add;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $type;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -85,6 +90,18 @@ class Rates
     public function setDateAdd(\DateTimeInterface $date_add): self
     {
         $this->date_add = $date_add;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

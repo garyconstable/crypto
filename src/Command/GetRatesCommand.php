@@ -55,7 +55,40 @@ class GetRatesCommand extends Command
         $configuration = Configuration::apiKey($this->apiKey, $this->apiSecret);
         $this->client = Client::create($configuration);
         $this->getCrypto();
-        $this->getFiats();
+        $this->emailMinMax();
+    }
+
+    /**
+     * ==
+     * @param string $currency1
+     * @param string $currency2
+     * @return float
+     */
+    public function getBuyRate($currency1 = 'BTC', $currency2 = 'GBP')
+    {
+        $data = $this->client->getBuyPrice($currency1 . '-' . $currency2);
+        $amount = $data->getAmount();
+        return !empty($amount) ? $amount : 0.00;
+    }
+
+    /**
+     * ==
+     * @param string $currency1
+     * @param string $currency2
+     * @return float
+     */
+    public function getSellRate($currency1 = 'BTC', $currency2 = 'GBP')
+    {
+        $data = $this->client->getSellPrice($currency1 . '-' . $currency2);
+        $amount = $data->getAmount();
+        return !empty($amount) ? $amount : 0.00;
+    }
+
+    public function getSpotPrice($currency1 = 'BTC', $currency2 = 'GBP')
+    {
+        $data = $this->client->getSpotPrice($currency1 . '-' . $currency2);
+        $amount = $data->getAmount();
+        return !empty($amount) ? $amount : 0.00;
     }
 
     /**
@@ -65,7 +98,7 @@ class GetRatesCommand extends Command
      */
     public static function d($data = [], $die = true)
     {
-        echo '<pre>'.print_r($data, true).'</pre>';
+        echo '<pre>' . print_r($data, true) . '</pre>';
         if ($die) {
             die();
         }
@@ -102,21 +135,22 @@ class GetRatesCommand extends Command
     public function getCrypto()
     {
         foreach ($this->cryptos as $crypto) {
-            $data = $this->listExchangeRates($this->client, $crypto);
-            $gbp = $data['rates']['GBP'];
+            $types = array(
+                'buy' => $this->getBuyRate($crypto),
+                'sell' => $this->getSellRate($crypto),
+                'spot' => $this->getSpotPrice($crypto),
+            );
 
-            if ($crypto == 'BTC') {
-                $this->emailMinMax($gbp);
+            foreach ($types as $key => $value) {
+                $r = new Rates();
+                $r->setCurrency($crypto);
+                $r->setCurrency2('GBP');
+                $r->setValue($value);
+                $r->setDateAdd(new \DateTime());
+                $r->setType($key);
+                $this->entityManager->persist($r);
+                $this->entityManager->flush();
             }
-
-            $r = new Rates();
-            $r->setCurrency($crypto);
-            $r->setCurrency2('GBP');
-            $r->setValue($gbp);
-            $r->setDateAdd(new \DateTime());
-
-            $this->entityManager->persist($r);
-            $this->entityManager->flush();
         }
     }
 
@@ -144,27 +178,31 @@ class GetRatesCommand extends Command
         }
     }
 
-    public function emailMinMax($current_rate = 0.00)
+    public function emailMinMax()
     {
-        $sql = "SELECT `value` FROM `rates` where `currency` = 'BTC' ORDER BY `value` ASC LIMIT 1;";
+
+        $sql = " SELECT `value`  FROM `rates` where `currency` = 'BTC' and `type` = 'buy'  ORDER BY id DESC  LIMIT 1;";
         $stmt = $this->entityManager->getConnection()->prepare($sql);
         $stmt->execute();
         $data = $stmt->fetchAll();
-        $min = isset($data[0]['value']) ? $data[0]['value'] : 0;
+        $buy = isset($data[0]['value']) ? $data[0]['value'] : 0.00;
 
-        $sql = "SELECT `value` FROM `rates` where `currency` = 'BTC' ORDER BY `value` DESC LIMIT 1;";
+        $sql = " SELECT `value`  FROM `rates` where `currency` = 'BTC' and `type` = 'sell'  ORDER BY id DESC  LIMIT 1;";
         $stmt = $this->entityManager->getConnection()->prepare($sql);
         $stmt->execute();
         $data = $stmt->fetchAll();
-        $max = isset($data[0]['value']) ? $data[0]['value'] : 0 ;
+        $sell = isset($data[0]['value']) ? $data[0]['value'] : 0.00;
 
-        $values = ['min' => $min, 'max' => $max];
+        $sql = " SELECT `value`  FROM `rates` where `currency` = 'BTC' and `type` = 'spot'  ORDER BY id DESC  LIMIT 1;";
+        $stmt = $this->entityManager->getConnection()->prepare($sql);
+        $stmt->execute();
+        $data = $stmt->fetchAll();
+        $spot = isset($data[0]['value']) ? $data[0]['value'] : 0.00;
 
-        $body  = '<p>1 BTC = &pound;'.$current_rate.'</p>';
-        $body .= '<p><strong>Lowest:</strong></p>';
-        $body .= '<p>1 BTC = &pound;'. $values['min'].'</p>';
-        $body .= '<p><strong>Highest:</strong></p>';
-        $body .= '<p>1 BTC = &pound;'. $values['max'].'</p>';
+
+        $body  = '<p><strong>Buy</strong>: &pound;' . $buy . '</p>';
+        $body .= '<p><strong>Sell</strong>: &pound;' . $sell . '</p>';
+        $body .= '<p><strong>Spot</strong>: &pound;' . $spot . '</p>';
 
         $message = (new \Swift_Message('Current Bitcoin Rates.'))
             ->setFrom('info@garyconstable.dev')
