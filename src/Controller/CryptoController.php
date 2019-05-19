@@ -43,7 +43,7 @@ class CryptoController extends AbstractController
     public function getSell()
     {
         $this->entityManager = $this->getDoctrine()->getManager();
-        $sql = "SELECT `value` FROM `rates` where `currency` = 'BTC' ORDER BY `value` DESC LIMIT 1;";
+        $sql = " SELECT `value`  FROM `rates` where `currency` = 'BTC' and `type` = 'sell'  ORDER BY id DESC  LIMIT 1;";
         $stmt = $this->entityManager->getConnection()->prepare($sql);
         $stmt->execute();
         $data = $stmt->fetchAll();
@@ -64,7 +64,7 @@ class CryptoController extends AbstractController
     public function getBuy()
     {
         $this->entityManager = $this->getDoctrine()->getManager();
-        $sql = "SELECT `value` FROM `rates` where `currency` = 'BTC' ORDER BY `value` ASC LIMIT 1;";
+        $sql = " SELECT `value`  FROM `rates` where `currency` = 'BTC' and `type` = 'buy'  ORDER BY `value` ASC  LIMIT 1;";
         $stmt = $this->entityManager->getConnection()->prepare($sql);
         $stmt->execute();
         $data = $stmt->fetchAll();
