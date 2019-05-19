@@ -202,7 +202,6 @@ class GetRatesCommand extends Command
         $data = $stmt->fetchAll();
         $spot = isset($data[0]['value']) ? $data[0]['value'] : 0.00;
 
-
         $transactions = $this->calculateTransaction($sell);
 
         $body = '<p><strong>Buy</strong>: &pound;' . $buy . '</p>';
@@ -211,6 +210,7 @@ class GetRatesCommand extends Command
 
         if (!empty($transactions)) {
             $body .= '<hr>';
+            $body .= '<h3>Transactions:</h3>';
             $body .= '<table cellpadding="10" cellspacing="10">';
             $body .= '<thead>';
             $body .= '<tr>';
@@ -239,6 +239,46 @@ class GetRatesCommand extends Command
                 $body .= '<td>' . $transaction['fee_sell'] . '</td>';
                 $body .= '<td>' . $transaction['subtotal'] . '</td>';
                 $body .= '<td>' . $transaction['profit_loss'] . '</td>';
+                $body .= '</tr>';
+            }
+            $body .= '</tbody>';
+            $body .= '</table>';
+        }
+
+
+        $sales =  $this->entityManager->getRepository('App:Sales')->findAll();
+
+        if (!empty($sales)) {
+            $body .= '<hr>';
+            $body .= '<h3>Sales:</h3>';
+            $body .= '<table cellpadding="10" cellspacing="10">';
+            $body .= '<thead>';
+            $body .= '<tr>';
+            $body .= '<th>Cost</th>';
+            $body .= '<th>Fee</th>';
+            $body .= '<th>GBP</th>';
+            $body .= '<th>BTC</th>';
+            $body .= '<th>Buy</th>';
+            $body .= '<th>Sell</th>';
+            $body .= '<th>Value</th>';
+            $body .= '<th>Fee</th>';
+            $body .= '<th>Subtotal</th>';
+            $body .= '<th>Profit / Loss</th>';
+            $body .= '</tr>';
+            $body .= '</thead>';
+            $body .= '<tbody>';
+            foreach ($sales as $transaction) {
+                $body .= '<tr>';
+                $body .= '<td>' . $transaction->getCost() . '</td>';
+                $body .= '<td>' . $transaction->getFee() . '</td>';
+                $body .= '<td>' . $transaction->getGbp(). '</td>';
+                $body .= '<td>' . $transaction->getBtc() . '</td>';
+                $body .= '<td>' . $transaction->getBuyRate() . '</td>';
+                $body .= '<td>' . $transaction->getSellRate() . '</td>';
+                $body .= '<td>' . $transaction->getValueGbp() . '</td>';
+                $body .= '<td>' . $transaction->getFeeSell() . '</td>';
+                $body .= '<td>' . $transaction->getSubtotal() . '</td>';
+                $body .= '<td>' . $transaction->getProfitLoss() . '</td>';
                 $body .= '</tr>';
             }
             $body .= '</tbody>';
